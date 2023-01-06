@@ -71,7 +71,7 @@ inline void write_16bit(uint16_t data) {
 inline void write_16bit_alternate(uint16_t data) {
   //            0+16=16 13+16=29              14-12=2 15-12=3
   //         data 0-13 gpio 16-29          data 14-15 gpio 2-3
-  GPIO6_DR = ((data & 0x3fff) << 16) | ((data & 0xc000) >> 12));
+  GPIO6_DR = ((data & 0x3fff) << 16) | ((data & 0xc000) >> 12);
 }
 
 
@@ -87,6 +87,8 @@ uint8_t dac1 = 1;
 uint8_t dac2 = 1;
 uint16_t dac;
 void loop() {
+
+  /*
  //cycles each set of 8 pins
  for(int i=0; i<16; i++){ 
   dac1 = dac1<<i;
@@ -94,6 +96,21 @@ void loop() {
   dac = (dac2<<8) + dac1;
   write_16bit_alternate(dac);
   delay(500);
+ }
+ */
+
+ //ramps
+  for(int i=0; i<256; i++){ 
+   dac1 = i;
+   dac = (dac2<<8) + dac1;
+   write_16bit_alternate(dac);
+   delay(10);
+ }
+ for(int i=0; i<256; i++){ 
+   dac2 = i;
+   dac = (dac2<<8) + dac1;
+   write_16bit_alternate(dac);
+   delay(10);
  }
  
 }
